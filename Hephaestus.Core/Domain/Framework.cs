@@ -1,0 +1,41 @@
+﻿namespace Hephaestus.Core.Domain
+{
+    public enum Framework
+    {
+        Unknown,
+        net11,
+        net20,
+        net35,
+        net40,
+        net403,
+        net45,
+        net451,
+        net452,
+        net46,
+        net461,
+        net462,
+        net47,
+        net471,
+        net472,
+        net48,
+        netstandard10,
+        netstandard11,
+        netstandard12,
+        netstandard13,
+        netstandard14,
+        netstandard15,
+        netstandard16,
+        netstandard20,
+        netstandard21,
+        netcoreapp10,
+        netcoreapp11,
+        netcoreapp20,
+        netcoreapp21,
+        netcoreapp22,
+        netcoreapp30,
+        netcoreapp31,
+        net50,
+        net60,
+        net70
+    }
+}
