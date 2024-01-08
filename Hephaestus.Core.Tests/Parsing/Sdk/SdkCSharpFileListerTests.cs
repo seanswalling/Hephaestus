@@ -23,7 +23,11 @@ namespace Hephaestus.Core.Tests.Parsing.Sdk
                 "C:\\Foo\\TheBaring.csproj",
                 Framework.net80,
                 OutputType.Library,
-                ProjectFormat.Sdk
+                ProjectFormat.Sdk,
+                "Foo",
+                "Foo",
+                "Foo",
+                new Warnings(null, null, [])
                 );
 
             var files = new SdkCSharpFileLister(_collection, meta).ListFiles();
@@ -42,7 +46,11 @@ namespace Hephaestus.Core.Tests.Parsing.Sdk
                 "C:\\Foo\\TheBaring.csproj",
                 Framework.net80,
                 OutputType.Library,
-                ProjectFormat.Sdk
+                ProjectFormat.Sdk,
+                "Foo",
+                "Foo",
+                "Foo",
+                new Warnings(null, null, [])
                 );
 
             var files = new SdkCSharpFileLister(_collection, meta).ListFiles();

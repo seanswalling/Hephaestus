@@ -7,11 +7,13 @@ namespace Hephaestus.Core.Domain
     {
         public HashSet<ProjectReference> ProjectReferences;
         public HashSet<PackageReference> PackageReferences;
+        public HashSet<GacReference> GacReferences;
 
         public ReferenceManager()
         {
             ProjectReferences = [];
             PackageReferences = [];
+            GacReferences = [];
         }
 
         private void Add(ProjectReference reference)
@@ -30,6 +32,31 @@ namespace Hephaestus.Core.Domain
             }
         }
 
+        public void Upgrade(PackageReference oldReference, PackageReference upgradedReference)
+        {
+            if (!PackageReferences.Contains(oldReference))
+                return;
+
+            PackageReferences.Remove(oldReference);
+            PackageReferences.Add(upgradedReference);
+        }
+
+        public void Remove(PackageReference oldReference)
+        {
+            if (!PackageReferences.Contains(oldReference))
+                return;
+
+            PackageReferences.Remove(oldReference);
+        }
+
+        private void Add(GacReference reference)
+        {
+            if (!GacReferences.Contains(reference))
+            {
+                GacReferences.Add(reference);
+            }
+        }
+
         public void Add(IReference reference)
         {
             ArgumentNullException.ThrowIfNull(reference, nameof(reference));
@@ -43,6 +70,13 @@ namespace Hephaestus.Core.Domain
             if (reference is PackageReference package)
             {
                 Add(package);
+                return;
+            }
+
+
+            if (reference is GacReference gac)
+            {
+                Add(gac);
                 return;
             }
         }

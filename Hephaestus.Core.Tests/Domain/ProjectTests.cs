@@ -6,10 +6,16 @@ namespace Hephaestus.Core.Tests.Domain
 {
     public class ProjectTests
     {
+        ProjectMetadata _metadata;
+        public ProjectTests()
+        {
+            _metadata = new ProjectMetadata("Foo\\Bah", Framework.Unknown, OutputType.Unknown, ProjectFormat.Unknown, "Foo", "Foo", "Foo", new Warnings(null, null, []));
+        }
+
         [Fact]
         public void NameCannotBeNull()
         {
-            Assert.Throws<ArgumentNullException>(() => new Project(null, new ProjectMetadata("Foo\\Bah", Framework.Unknown, OutputType.Unknown, ProjectFormat.Unknown), [], [], new ReferenceManager()));
+            Assert.Throws<ArgumentNullException>(() => new Project(null, _metadata, [], [], new ReferenceManager()));
         }
 
         [Fact]
@@ -21,25 +27,25 @@ namespace Hephaestus.Core.Tests.Domain
         [Fact]
         public void FilesCannotBeNull()
         {
-            Assert.Throws<ArgumentNullException>(() => new Project("Foo.csproj", new ProjectMetadata("Foo\\Bah", Framework.Unknown, OutputType.Unknown, ProjectFormat.Unknown), null, [], new ReferenceManager()));
+            Assert.Throws<ArgumentNullException>(() => new Project("Foo.csproj", _metadata, null, [], new ReferenceManager()));
         }
 
         [Fact]
         public void ResourcesCannotBeNull()
         {
-            Assert.Throws<ArgumentNullException>(() => new Project("Foo.csproj", new ProjectMetadata("Foo\\Bah", Framework.Unknown, OutputType.Unknown, ProjectFormat.Unknown), [], null, new ReferenceManager()));
+            Assert.Throws<ArgumentNullException>(() => new Project("Foo.csproj", _metadata, [], null, new ReferenceManager()));
         }
 
         [Fact]
         public void ReferencesCannotBeNull()
         {
-            Assert.Throws<ArgumentNullException>(() => new Project("Foo.csproj", new ProjectMetadata("Foo\\Bah", Framework.Unknown, OutputType.Unknown, ProjectFormat.Unknown), [], [], null));
+            Assert.Throws<ArgumentNullException>(() => new Project("Foo.csproj", _metadata, [], [], null));
         }
 
         [Fact]
         public void CanCreateProject()
         {
-            _ = new Project("Foo.csproj", new ProjectMetadata("Foo\\Bah", Framework.Unknown, OutputType.Unknown, ProjectFormat.Unknown), [], [], new ReferenceManager());
+            _ = new Project("Foo.csproj", _metadata, [], [], new ReferenceManager());
         }
     }
 }

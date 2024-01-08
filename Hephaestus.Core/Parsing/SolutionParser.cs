@@ -28,7 +28,20 @@ namespace Hephaestus.Core.Parsing
                 .Select(line => line.Split(',')[1])
                 .Select(l => Path.GetFullPath(Path.Combine(Directory.GetParent(filePath)!.FullName, l.Trim().Replace("\"", string.Empty))));
 
-            var projects = listOfProjectFiles.Select(p => _projectParser.Parse(p, XDocument.Parse(_fileCollection.GetContent(p))));
+            var projects = listOfProjectFiles.Select(p =>
+            {
+                Project proj;
+                try
+                {
+                    proj = _projectParser.Parse(p, XDocument.Parse(_fileCollection.GetContent(p)));
+                }
+                catch (Exception ex)
+                {
+                    throw new ApplicationException($"Error Parsing Project : {p}", ex);
+                }
+
+                return proj;
+            });
 
             var fileName = Path.GetFileName(filePath);
 

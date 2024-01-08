@@ -17,7 +17,7 @@ namespace Hephaestus.Core.Tests.Parsing.Factories
         [InlineData(ProjectFormat.Framework, typeof(LegacyCSharpFileLister))]
         public void CanCreateParser(ProjectFormat format, Type parserType)
         {
-            var meta = new ProjectMetadata("Foo\\Bar", Framework.net80, OutputType.Library, format);
+            var meta = new ProjectMetadata("Foo\\Bar", Framework.net80, OutputType.Library, format, "Foo", "Foo", "Foo", new Warnings(null, null, []));
             var parser = new CSharpFileListerFactory(new BasicFileCollection(CacheManager.Empty())).Create(meta, new XDocument());
             Assert.IsType(parserType, parser);
         }
@@ -25,7 +25,7 @@ namespace Hephaestus.Core.Tests.Parsing.Factories
         [Fact]
         public void UnknownFormatThrows()
         {
-            var meta = new ProjectMetadata("Foo\\Bar", Framework.net80, OutputType.Library, ProjectFormat.Unknown);
+            var meta = new ProjectMetadata("Foo\\Bar", Framework.net80, OutputType.Library, ProjectFormat.Unknown, "Foo", "Foo", "Foo", new Warnings(null, null, []));
             Assert.Throws<ArgumentException>(() => new CSharpFileListerFactory(new BasicFileCollection(CacheManager.Empty())).Create(meta, new XDocument()));
         }
     }

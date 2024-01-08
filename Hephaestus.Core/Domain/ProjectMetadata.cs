@@ -6,10 +6,23 @@ namespace Hephaestus.Core.Domain
     {
         public string ProjectPath { get; set; }
         public ProjectFormat Format { get; set; }
-        public Framework Framework { get; }
+        public Framework Framework { get; set; }
         public OutputType OutputType { get; }
+        public string AssemblyName { get; }
+        public string RootNamespace { get; }
+        public string Title { get; }
+        public Warnings Warnings { get; }
 
-        public ProjectMetadata(string projectPath, Framework framework, OutputType outputType, ProjectFormat format)
+
+        public ProjectMetadata(
+            string projectPath,
+            Framework framework,
+            OutputType outputType,
+            ProjectFormat format,
+            string assemblyName,
+            string rootNamespace,
+            string title,
+            Warnings warnings)
         {
             ArgumentException.ThrowIfNullOrWhiteSpace(projectPath, nameof(projectPath));
 
@@ -17,6 +30,10 @@ namespace Hephaestus.Core.Domain
             Framework = framework;
             OutputType = outputType;
             Format = format;
+            AssemblyName = assemblyName;
+            RootNamespace = rootNamespace;
+            Title = title;
+            Warnings = warnings;
         }
     }
 }

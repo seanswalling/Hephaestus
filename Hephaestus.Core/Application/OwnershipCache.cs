@@ -11,11 +11,12 @@ namespace Hephaestus.Core.Application
     {
         public string Name { get; init; }
         public FrozenDictionary<string, IEnumerable<string>> FileOwnership { get; init; }
-
+        private string _filePath;
         private OwnershipCache(string name, FrozenDictionary<string, IEnumerable<string>> fileOwnership)
         {
             Name = name;
             FileOwnership = fileOwnership;
+            _filePath = GetCacheLocation(name);
         }
 
         public bool IsEmpty()
@@ -30,12 +31,18 @@ namespace Hephaestus.Core.Application
                 WriteIndented = true,
             };
 
-            File.WriteAllText($"hephaestus-{Name}-sdk-ownership-cache.json", JsonSerializer.Serialize(FileOwnership, options));
+            File.WriteAllText(_filePath, JsonSerializer.Serialize(FileOwnership, options));
+        }
+
+        public static string GetCacheLocation(string name)
+        {
+            var folder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "Hephaestus");
+            return Path.Combine(folder, $"hephaestus-{name}-sdk-ownership-cache.json");
         }
 
         public static OwnershipCache Load(string name)
         {
-            var cache = $"hephaestus-{name}-sdk-ownership-cache.json";
+            var cache = GetCacheLocation(name);
 
             if (!File.Exists(cache))
                 throw new FileNotFoundException(cache);
@@ -57,7 +64,7 @@ namespace Hephaestus.Core.Application
 
         public static bool Exists(string name)
         {
-            return File.Exists($"hephaestus-{name}-sdk-ownership-cache.json");
+            return File.Exists(GetCacheLocation(name));
         }
 
         public static OwnershipCache Build(string name, IEnumerable<string> fileCollection)

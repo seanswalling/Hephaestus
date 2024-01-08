@@ -16,7 +16,11 @@ namespace Hephaestus.Core.Tests.Parsing
             _sut = new ProjectMetadataParser(
                 new ProjectFormatParser(),
                 new ProjectFrameworkParserFactory(new TfmTranslator()),
-                new ProjectOutputTypeParserFactory(new OutputTypeTranslator())
+                new ProjectOutputTypeParserFactory(new OutputTypeTranslator()),
+                new AssemblyNameParserFactory(),
+                new RootNamespaceParserFactory(),
+                new TitleParserFactory(),
+                new WarningsParserFactory()
                 );
         }
 
@@ -28,7 +32,10 @@ namespace Hephaestus.Core.Tests.Parsing
                     new XAttribute("Sdk", "Microsoft.NET.Sdk"),
                     new XElement("PropertyGroup",
                         new XElement("TargetFramework", "net8.0"),
-                        new XElement("OutputType", "library")
+                        new XElement("OutputType", "library"),
+                        new XElement("Title", "MyTestProject"),
+                        new XElement("AssemblyName", "MyTestProject"),
+                        new XElement("RootNamespace", "MyTestProject")
                     )
                 ));
 
@@ -47,7 +54,10 @@ namespace Hephaestus.Core.Tests.Parsing
                 new XElement("Project",
                     new XElement("PropertyGroup",
                         new XElement(_namespace + "TargetFrameworkVersion", "net48"),
-                        new XElement(_namespace + "OutputType", "winexe")
+                        new XElement(_namespace + "OutputType", "winexe"),
+                        new XElement(_namespace + "Title", "MyTestProject"),
+                        new XElement(_namespace + "AssemblyName", "MyTestProject"),
+                        new XElement(_namespace + "RootNamespace", "MyTestProject")
                     )
                 ));
 

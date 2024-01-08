@@ -12,8 +12,8 @@ namespace Hephaestus.Core.Parsing.Factories
         {
             return format switch
             {
-                ProjectFormat.Sdk => new ReferenceParser(new SdkPackageReferenceParser(projectDocument), new SdkProjectReferenceParser(projectDocument)),
-                ProjectFormat.Framework => new ReferenceParser(new LegacyPackageReferenceParser(packageDocument!), new LegacyProjectReferenceParser(projectDocument)),
+                ProjectFormat.Sdk => new ReferenceParser(new SdkPackageReferenceParser(projectDocument), new SdkProjectReferenceParser(projectDocument), new SdkGacReferenceParser(projectDocument)),
+                ProjectFormat.Framework => new ReferenceParser(new LegacyPackageReferenceParser(packageDocument!), new LegacyProjectReferenceParser(projectDocument), new LegacyGacReferenceParser(projectDocument)),
                 _ => throw new ArgumentException(null, nameof(format)),
             };
         }

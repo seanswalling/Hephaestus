@@ -12,7 +12,7 @@ namespace Hephaestus.Core.Application
             return EnumerateFiles(root, "*.cs")
                 .Concat(EnumerateFiles(root, "*.csproj"))
                 .Concat(EnumerateFiles(root, "*.sln"))
-                .Concat(EnumerateFiles(root, "packages.config"))
+                //.Concat(EnumerateFiles(root, "packages.config")) //now unsupported!
                 .OrderBy(x => x)
                 .ToDictionary(x => x, File.ReadAllText);
         }

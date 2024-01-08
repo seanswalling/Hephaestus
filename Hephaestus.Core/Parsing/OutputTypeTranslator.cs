@@ -10,6 +10,18 @@ namespace Hephaestus.Core.Parsing
             return string.IsNullOrWhiteSpace(input) ? OutputType.Library : TranslateInner(input);
         }
 
+        public string Translate(OutputType input)
+        {
+            return input switch
+            {
+                OutputType.Library => "Library",
+                OutputType.Exe => "Exe",
+                OutputType.Module => "Module",
+                OutputType.Winexe => "WinExe",
+                _ => throw new ArgumentOutOfRangeException(nameof(input), $"{input}")
+            };
+        }
+
         private OutputType TranslateInner(string value)
         {
             var val = value.ToLowerInvariant();

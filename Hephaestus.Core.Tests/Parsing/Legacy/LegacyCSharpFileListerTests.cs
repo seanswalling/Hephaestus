@@ -22,7 +22,11 @@ namespace Hephaestus.Core.Tests.Parsing.Legacy
                 "C:\\Foo\\thisProject.csproj",
                 Framework.net48,
                 OutputType.Library,
-                ProjectFormat.Framework
+                ProjectFormat.Framework,
+                "Foo",
+                "Foo",
+                "Foo",
+                new Warnings(null, null, [])
                 );
         }
 

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Hephaestus.Core.Domain;
 
 namespace Hephaestus.Core.Parsing
@@ -19,6 +20,13 @@ namespace Hephaestus.Core.Parsing
             }
 
             throw new ArgumentOutOfRangeException(nameof(moniker));
+        }
+
+        public string Translate(Framework framework)
+        {
+            return MonikerDictionary
+                .Where(x => x.Key != "v4.8")
+                .Single(x => x.Value == framework).Key;
         }
 
         private static readonly Dictionary<string, Framework> MonikerDictionary = new()

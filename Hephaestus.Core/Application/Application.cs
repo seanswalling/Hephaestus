@@ -38,7 +38,11 @@ namespace Hephaestus.Core.Application
                         new ProjectMetadataParser(
                             new ProjectFormatParser(),
                             new ProjectFrameworkParserFactory(new TfmTranslator()),
-                            new ProjectOutputTypeParserFactory(new OutputTypeTranslator())),
+                            new ProjectOutputTypeParserFactory(new OutputTypeTranslator()),
+                            new AssemblyNameParserFactory(),
+                            new RootNamespaceParserFactory(),
+                            new TitleParserFactory(),
+                            new WarningsParserFactory()),
                         new CSharpFileListerFactory(_files),
                         new CSharpFileParser(
                             new CSharpFileNamespaceDeclarationParser(),
@@ -48,10 +52,14 @@ namespace Hephaestus.Core.Application
                 _files);
         }
 
-        public void LoadRepository(KnownRepository kr)
+        public void SetRepository(KnownRepository kr)
         {
             Name = kr.Name;
             Path = kr.Path;
+        }
+
+        public void LoadRepository()
+        {
             CacheManager = CacheManager.Load(Name);
             _files.Update(CacheManager);
         }
@@ -64,6 +72,11 @@ namespace Hephaestus.Core.Application
                 KnownRepositories = KnownRepositories.Append(kr);
                 KnownRepositoryManager.Save(KnownRepositories);
             }
+        }
+
+        public string GetFileContent(string fullPath)
+        {
+            return _files.GetContent(fullPath);
         }
 
         public CodeRepository Parse()

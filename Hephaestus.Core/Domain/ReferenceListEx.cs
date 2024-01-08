@@ -7,7 +7,7 @@ namespace Hephaestus.Core.Domain
     {
         public static void AddReference(this List<PackageReference> packages, PackageReference package)
         {
-            if (!packages.Contains(package, new PackageComparer()))
+            if (!packages.Contains(package))
                 packages.Add(package);
         }
 

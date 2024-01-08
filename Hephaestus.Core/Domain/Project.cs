@@ -5,6 +5,7 @@ namespace Hephaestus.Core.Domain
 {
     public class Project
     {
+
         public string Name { get; }
         public ProjectMetadata Metadata { get; }
         public IEnumerable<CSharpFile> Files { get; }

@@ -26,7 +26,11 @@ namespace Hephaestus.Core.Tests.Parsing
                         new ProjectMetadataParser(
                             new ProjectFormatParser(),
                             new ProjectFrameworkParserFactory(new TfmTranslator()),
-                            new ProjectOutputTypeParserFactory(new OutputTypeTranslator())
+                            new ProjectOutputTypeParserFactory(new OutputTypeTranslator()),
+                            new AssemblyNameParserFactory(),
+                            new RootNamespaceParserFactory(),
+                            new TitleParserFactory(),
+                            new WarningsParserFactory()
                             ),
                         new CSharpFileListerFactory(_files),
                         new CSharpFileParser(
@@ -40,8 +44,6 @@ namespace Hephaestus.Core.Tests.Parsing
         [Fact]
         public void CanParseRepository()
         {
-
-
             var repo = _sut.Parse("Foo", "C:\\Foo");
 
             Assert.Equal("Foo", repo.Name);
@@ -76,7 +78,10 @@ namespace Hephaestus.Core.Tests.Parsing
                         new XAttribute("Sdk", "Microsoft.NET.Sdk"),
                         new XElement("PropertyGroup",
                             new XElement("TargetFramework", "net8.0"),
-                            new XElement("OutputType", "library")
+                            new XElement("OutputType", "library"),
+                            new XElement("Title", "MyTestProject"),
+                            new XElement("AssemblyName", "MyTestProject"),
+                            new XElement("RootNamespace", "MyTestProject")
                         ),
                         new XElement("ItemGroup",
                             new XElement("EmbeddedResource", new XAttribute("Include", "..\\..\\Er1")),

@@ -11,10 +11,12 @@ namespace Hephaestus.Core.Application
         public string Name { get; init; }
         public FrozenDictionary<string, string> FileContent { get; init; }
 
+        private string _filePath;
         private ContentCache(string name, FrozenDictionary<string, string> fileContent)
         {
             FileContent = fileContent;
             Name = name;
+            _filePath = GetCacheLocation(name);
         }
 
         public void Save()
@@ -23,7 +25,7 @@ namespace Hephaestus.Core.Application
             {
                 WriteIndented = true,
             };
-            File.WriteAllText($"hephaestus-{Name}-content-cache.json", JsonSerializer.Serialize(FileContent, options));
+            File.WriteAllText(_filePath, JsonSerializer.Serialize(FileContent, options));
         }
 
         public bool IsEmpty()
@@ -31,9 +33,15 @@ namespace Hephaestus.Core.Application
             return FileContent.Count == 0;
         }
 
+        public static string GetCacheLocation(string name)
+        {
+            var folder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "Hephaestus");
+            return Path.Combine(folder, $"hephaestus-{name}-content-cache.json");
+        }
+
         public static ContentCache Load(string name)
         {
-            var cache = $"hephaestus-{name}-content-cache.json";
+            var cache = GetCacheLocation(name);
 
             if (!File.Exists(cache))
                 throw new FileNotFoundException(cache);
@@ -55,7 +63,7 @@ namespace Hephaestus.Core.Application
 
         public static bool Exists(string name)
         {
-            return File.Exists($"hephaestus-{name}-content-cache.json");
+            return File.Exists(GetCacheLocation(name));
         }
 
         public static ContentCache Build(string name, IDictionary<string, string> fileCollection)
