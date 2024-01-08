@@ -1,21 +1,19 @@
-﻿using System.Collections.Generic;
-using System.Linq;
+﻿using System;
+using System.Collections.Generic;
 
 namespace Hephaestus.Core.Domain
 {
     public class Solution
     {
-        public string Path { get; }
         public string Name { get; }
-        public IReadOnlyCollection<string> Projects => _projects.ToList().AsReadOnly();
+        public IEnumerable<Project> Projects { get; }
 
-        private readonly HashSet<string> _projects;
-
-        internal Solution(string name, string path, IEnumerable<string> projects)
+        public Solution(string name, IEnumerable<Project> projects)
         {
-            Path = path;
+            ArgumentNullException.ThrowIfNull(name, nameof(name));
+            ArgumentNullException.ThrowIfNull(projects, nameof(projects));
             Name = name;
-            _projects = new HashSet<string>(projects);
+            Projects = projects;
         }
     }
 }

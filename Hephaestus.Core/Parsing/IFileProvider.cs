@@ -2,7 +2,7 @@
 
 namespace Hephaestus.Core.Parsing
 {
-    internal interface IFileProvider
+    public interface IFileProvider
     {
         bool HasFile(string path);
         string GetFile(string path);

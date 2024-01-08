@@ -14,6 +14,7 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Hephaestus.CLI", "Hephaestus.CLI\Hephaestus.CLI.csproj", "{F50951BB-E6D3-43B6-BCB9-C048CE0CC3EB}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hephaestus.UserAdapter", "Hephaestus.UserAdapter\Hephaestus.UserAdapter.csproj", "{6B3024BB-BDF9-4836-817A-7FFC900093ED}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hephaestus.Core.Tests", "Hephaestus.Core.Tests\Hephaestus.Core.Tests.csproj", "{9840E6AE-E2EE-479F-9B3D-6441519DAFA9}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

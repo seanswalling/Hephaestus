@@ -1,77 +1,100 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Xml.Linq;
-using System.Xml.XPath;
 using Hephaestus.Core.Domain;
+using Hephaestus.Core.Parsing.Factories;
 
 namespace Hephaestus.Core.Parsing
 {
-    internal class ProjectParser
+    public class ProjectParser : IProjectParser
     {
-        internal XDocument Content { get; private set; }
-        internal string ProjectName { get; private set; }
-        internal string FilePath { get; private set; }
-        internal ProjectFormat Format { get; private set; }
-        internal OutputType OutputType { get; private set; }
-        internal Framework Framework { get; private set; }
-        internal ICollection<EmbeddedResource> EmbeddedResources { get; private set; }
-        internal ICollection<ProjectReference> ProjectReferences { get; private set; }
-        internal ICollection<PackageReference> PackageReferences { get; private set; }
-        internal ICollection<string> EmptyFolders { get; private set; }
-        internal List<Glob> Globs { get; private set; }
-        public IEnumerable<string> UsingDirectives { get; set; }
-        public IEnumerable<string> CompiledFiles { get; set; }
-        public IEnumerable<string> Namespaces { get; set; }
+        private readonly IReferenceParserFactory _referenceParserFactory;
+        private readonly IEmbeddedResourceParserFactory _embeddedResourceParserFactory;
+        private readonly IProjectMetadataParser _projectMetadataParser;
+        private readonly ICSharpFileListerFactory _cSharpFileListerFactory;
+        private readonly ICSharpFileParser _cSharpFileParser;
+        private readonly IFileCollection _fileCollection;
 
-        internal ProjectParser(string path, IFileProvider fileProvider)
+        //Project sharing between Slns, can't leed to a massive blow out in processing for
+        //every re-processed project.
+        private readonly Dictionary<string, Project> _projectCache = [];
+
+        public ProjectParser(
+            IReferenceParserFactory referenceParserFactory,
+            IEmbeddedResourceParserFactory embeddedResourceParserFactory,
+            IProjectMetadataParser projectMetadataParser,
+            ICSharpFileListerFactory cSharpFileListerFactory,
+            ICSharpFileParser cSharpFileParser,
+            IFileCollection fileCollection)
         {
-            Content = XDocument.Load(new StringReader(fileProvider.GetFile(path)));
-            FilePath = path;
-            Format = ParseProjectFormat(Content);
-            IProjectParser innerParser;
+            _referenceParserFactory = referenceParserFactory;
+            _embeddedResourceParserFactory = embeddedResourceParserFactory;
+            _projectMetadataParser = projectMetadataParser;
+            _cSharpFileListerFactory = cSharpFileListerFactory;
+            _cSharpFileParser = cSharpFileParser;
+            _fileCollection = fileCollection;
+        }
 
-            if (Format == ProjectFormat.Sdk)
+        public Project Parse(string filePath, XDocument document)
+        {
+            if (_projectCache.ContainsKey(filePath))
             {
-                innerParser = new SdkProjectFormatParser(Content, FilePath, fileProvider);
-                Globs = new List<Glob>
-                {
-                    new()
-                    {
-                        FileExtension = ".cs",
-                        RootPath = Path.GetDirectoryName(FilePath)!
-                    },
-                    new()
-                    {
-                        FileExtension = ".resx",
-                        RootPath = Path.GetDirectoryName(FilePath)!
-                    },
-                };
+                return _projectCache[filePath];
             }
             else
             {
-                innerParser = new LegacyProjectFormatParser(Content, FilePath, fileProvider);
-                Globs = new List<Glob>();
+                var project = InnerParse(filePath, document);
+                _projectCache.Add(filePath, project);
+                return project;
             }
-
-            ProjectName = innerParser.ParseProjectName();//Path.GetFileNameWithoutExtension(FilePath);
-            OutputType = innerParser.ParseOutputType();
-            Framework = innerParser.ParseTargetFrameworkMoniker();
-            EmbeddedResources = innerParser.ParseEmbeddedResources();
-            ProjectReferences = innerParser.ParseProjectReferences();
-            PackageReferences = innerParser.ParsePackageReferences();
-            EmptyFolders = innerParser.ParseEmptyFolders();
-            CompiledFiles = innerParser.ParseCompiledFiles();
-            UsingDirectives = innerParser.ParseUsingDirectives();
-            Namespaces = innerParser.ParseNamespaces();
         }
 
-        internal static ProjectFormat ParseProjectFormat(XDocument content)
+        private Project InnerParse(string filePath, XDocument document)
         {
-            if (content.XPathEvaluate("//@Sdk") is not IEnumerable<object> xpathResult) throw new ArgumentException("invalid xml");
+            var fileName = Path.GetFileName(filePath);
+            var metadata = _projectMetadataParser.Parse(filePath, document);
+            var embeddedResources = _embeddedResourceParserFactory.Create(metadata.Format).Parse(document);
+            var csFiles = _cSharpFileListerFactory
+                .Create(metadata, document)
+                .ListFiles()
+                .Select((kvp) => _cSharpFileParser.ParseFile(kvp.Key, kvp.Value))
+                .ToList();
 
-            return xpathResult.Any() ? ProjectFormat.Sdk : ProjectFormat.Framework;
+            //The below block is hacky, need a better way but low priority atm.
+            XDocument packages = null;
+            if (metadata.Format == ProjectFormat.Framework)
+            {
+                var parent = Directory.GetParent(metadata.ProjectPath)!.ToString();
+                var root = Path.GetFullPath(parent);
+
+                //if (!Path.EndsInDirectorySeparator(root))
+                //{
+                //    root += Path.DirectorySeparatorChar;
+                //}
+
+                // var glob = new Glob("packages.config", root);
+                if (_fileCollection.Exists(parent + "\\packages.config"))
+                {
+                    packages = XDocument.Parse(_fileCollection.GetContent(parent + "\\packages.config"));
+                }
+                else
+                {
+                    packages = new XDocument();
+                }
+            }
+
+            var references = new ReferenceManager();
+            var parser = _referenceParserFactory.Create(metadata.Format, document, packages);
+
+            foreach (var reference in parser.Parse())
+            {
+                references.Add(reference);
+            }
+
+            var project = new Project(fileName, metadata, csFiles, embeddedResources, references);
+
+            return project;
         }
     }
 }

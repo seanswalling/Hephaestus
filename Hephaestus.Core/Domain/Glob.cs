@@ -5,8 +5,16 @@ namespace Hephaestus.Core.Domain
 {
     public class Glob
     {
-        internal string FileExtension;
-        internal string RootPath;
+        public string FileExtension { get; }
+        public Uri RootPath { get; }
+
+        public Glob(string fileExtension, string rootPath)
+        {
+            FileExtension = fileExtension;
+            if (Path.HasExtension(rootPath))
+                throw new ArgumentException("Specify a directory, not a file");
+            RootPath = EnsureSeparator(new Uri(rootPath));
+        }
 
         public bool IncludesFile(string path)
         {
@@ -20,14 +28,20 @@ namespace Hephaestus.Core.Domain
 
         public bool IsBaseOf(string path)
         {
-            return new Uri(EnsureSeparator(RootPath)).IsBaseOf(new Uri(path));
+            return RootPath.IsBaseOf(new Uri(path));
         }
 
-        private static string EnsureSeparator(string path)
+        private static Uri EnsureSeparator(Uri path)
         {
-            return Path.GetFullPath(path).EndsWith(Path.DirectorySeparatorChar.ToString()) ? path : path + Path.DirectorySeparatorChar;
+            return Path.GetFullPath(path.AbsolutePath)
+                .EndsWith(Path.DirectorySeparatorChar.ToString()) ?
+                path :
+                new Uri(path.AbsolutePath + Path.DirectorySeparatorChar);
+        }
+
+        public bool Equals(Glob? other)
+        {
+            throw new NotImplementedException();
         }
     }
-
-
 }

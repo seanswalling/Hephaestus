@@ -1,7 +1,8 @@
 ﻿using System.IO;
-using Hephaestus.Core.Building;
-using Hephaestus.Core.FileSystem.Loading;
-using Hephaestus.Core.FileSystem.Watcher;
+using Hephaestus.Core.Version1;
+using Hephaestus.Core.Version1.Building;
+using Hephaestus.Core.Version1.FileSystem.Loading;
+using Hephaestus.Core.Version1.FileSystem.Watcher;
 
 namespace Hephaestus.Core.Setup
 {
@@ -13,11 +14,11 @@ namespace Hephaestus.Core.Setup
         private readonly FileContentCache _contentCache;
         private readonly CacheFileProviderAdapter _fileProviderAdapter;
         private readonly CacheFileStoreAdapter _fileStoreAdapter;
-        private readonly FileSystemLoader _fileLoader;
-        private readonly DomainBuilder _domainBuilder;
-        private readonly IRepositoryStore _repositoryStore;
+        private readonly FileSystemLoaderV1 _fileLoader;
+        private readonly DomainV1Builder _domainBuilder;
+        private readonly IRepositoryV1Store _repositoryStore;
 
-        public CoreHost(string repoPath, string repoName, IRepositoryStore repositoryStore)
+        public CoreHost(string repoPath, string repoName, IRepositoryV1Store repositoryStore)
         {
             _repoPath = repoPath;
             _repoName = repoName;
@@ -26,8 +27,8 @@ namespace Hephaestus.Core.Setup
             _contentCache = new FileContentCache();
             _fileProviderAdapter = new CacheFileProviderAdapter(_contentCache);
             _fileStoreAdapter = new CacheFileStoreAdapter(_contentCache);
-            _fileLoader = new FileSystemLoader(_fileStoreAdapter);
-            _domainBuilder = new DomainBuilder(_fileProviderAdapter);
+            _fileLoader = new FileSystemLoaderV1(_fileStoreAdapter);
+            _domainBuilder = new DomainV1Builder(_fileProviderAdapter);
         }
 
         public void Init()

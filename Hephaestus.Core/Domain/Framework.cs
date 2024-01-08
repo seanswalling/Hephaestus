@@ -36,6 +36,7 @@
         netcoreapp31,
         net50,
         net60,
-        net70
+        net70,
+        net80
     }
 }

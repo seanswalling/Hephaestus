@@ -21,7 +21,7 @@ namespace Hephaestus.Core.Domain
         {
             var existingDependencies = project.References.ToDictionary(x => System.IO.Path.GetFileNameWithoutExtension(x.RelativePath), x => x, StringComparer.OrdinalIgnoreCase);
             var packageDependencies = project.Packages.ToDictionary(x => x.Name, x => x, StringComparer.OrdinalIgnoreCase);
-            var backupPackages = LoadBackupPackages().ToDictionary(x => x.Name, x => x, StringComparer.OrdinalIgnoreCase);
+            //var backupPackages = LoadBackupPackages().ToDictionary(x => x.Name, x => x, StringComparer.OrdinalIgnoreCase);
             var directPackageDependencies = new List<PackageReference>();
             var directProjectDependencies = new List<ProjectReference>();
 

@@ -10,10 +10,12 @@ namespace Hephaestus.Core.Building
     public class SdkProjectFormatBuilder
     {
         private readonly Project _project;
+        private readonly Copyright _copyright;
 
-        public SdkProjectFormatBuilder(Project project)
+        public SdkProjectFormatBuilder(Project project, Copyright copyright)
         {
             _project = project;
+            _copyright = copyright;
         }
 
         public string[] ListDependencies()
@@ -26,7 +28,7 @@ namespace Hephaestus.Core.Building
         public string Build()
         {
             var sb = new StringBuilder();
-            sb.Append(Defaults(_project.ProjectName, _project.OutputType));
+            sb.Append(Defaults(_project.ProjectName, _project.OutputType, _project.Framework, _copyright));
             sb.Append(EmbeddedFileBlock(
                 _project.EmbeddedResources
                     .Where(x => x.RelativePath.Contains(".sql") || x.RelativePath.Contains(".docx"))
@@ -169,7 +171,7 @@ namespace Hephaestus.Core.Building
                 .DoubleIndent();
         }
 
-        private static string Defaults(string name, OutputType outputType)
+        private static string Defaults(string name, OutputType outputType, Framework framework, Copyright copyright)
         {
             var sb = new StringBuilder();
             //Maybe replace big format block one day?
@@ -180,7 +182,7 @@ namespace Hephaestus.Core.Building
     <Title>{name}</Title>
     <OutputType>{outputType}</OutputType>
     <Authors>Cash Converters</Authors>
-    <Copyright>{copywrite}</Copyright>
+    <Copyright>{copyright}</Copyright>
     <AssemblyName>{name}</AssemblyName>
     <RootNamespace>{name}</RootNamespace>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
