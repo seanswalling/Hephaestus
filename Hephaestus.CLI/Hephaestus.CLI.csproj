@@ -14,7 +14,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Hephaestus.Core\Hephaestus.Core.csproj" />
-    <ProjectReference Include="..\Hephaestus.Mercury\Hephaestus.Mercury.csproj" />
   </ItemGroup>
 
 </Project>
