@@ -13,7 +13,7 @@ namespace Hephaestus.CLI
 
         public override int Execute(CommandContext context)
         {
-            var app = new Application();
+            var app = new Application(FileLocations.ApplicationRoot);
 
             var repo = RepositoryFactory.SelectAndSetRepo();
 

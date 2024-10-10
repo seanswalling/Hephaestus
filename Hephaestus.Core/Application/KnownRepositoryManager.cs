@@ -1,14 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Text.Json;
 
 namespace Hephaestus.Core.Application
 {
-    public static class KnownRepositoryManager
+    public class KnownRepositoryManager(string _applicationRoot)
     {
-        public static void Save(IEnumerable<KnownRepository> knownRepositories)
+        public void Save(IEnumerable<KnownRepository> knownRepositories)
         {
             var options = new JsonSerializerOptions()
             {
@@ -18,19 +16,18 @@ namespace Hephaestus.Core.Application
             File.WriteAllText(GetCacheLocation(), JsonSerializer.Serialize(knownRepositories, options));
         }
 
-        public static IEnumerable<KnownRepository> Load()
+        public IEnumerable<KnownRepository> Load()
         {
             if (!File.Exists(GetCacheLocation()))
-                return Enumerable.Empty<KnownRepository>();
+                return [];
 
             var result = JsonSerializer.Deserialize<IEnumerable<KnownRepository>>(File.ReadAllText(GetCacheLocation()));
-            return result ?? Enumerable.Empty<KnownRepository>();
+            return result ?? [];
         }
 
-        public static string GetCacheLocation()
+        public string GetCacheLocation()
         {
-            var folder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "Hephaestus");
-            return Path.Combine(folder, $"known-repositories.json");
+            return Path.Combine(_applicationRoot, $"known-repositories.json");
         }
 
         public static bool Exists(KnownRepository kr)

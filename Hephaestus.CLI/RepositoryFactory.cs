@@ -9,7 +9,7 @@ namespace Hephaestus.CLI
     {
         public static CodeRepository SelectAndSetRepo()
         {
-            var app = new Application();
+            var app = new Application(FileLocations.ApplicationRoot);
 
             var repos = app.KnownRepositories.Select(x => x.Name);
 
@@ -17,6 +17,8 @@ namespace Hephaestus.CLI
                .Title("Select a Repository")
                .AddChoices(app.KnownRepositories)
                .UseConverter((kr) => kr.Name));
+
+            FileLocations.EnsureRepositoryFolder(option.Name);
 
             app.SetRepository(option);
 

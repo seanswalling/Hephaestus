@@ -30,5 +30,23 @@ namespace Hephaestus.CLI
                 Directory.CreateDirectory(ErrorFolder);
             }
         }
+
+        public static void EnsureApplicationFileStructures()
+        {
+            if (!Directory.Exists(ApplicationRoot))
+            {
+                Directory.CreateDirectory(ApplicationRoot);
+            }
+        }
+
+        public static void EnsureRepositoryFolder(string repoName)
+        {
+            var repoFolder = Path.Combine(ApplicationRoot, repoName);
+
+            if (!Directory.Exists(repoFolder))
+            {
+                Directory.CreateDirectory(repoFolder);
+            }
+        }
     }
 }

@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <TargetFramework>net8.0</TargetFramework>
+    <TargetFramework>net8.0-windows</TargetFramework>
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
@@ -10,10 +10,13 @@
     <PackageReference Include="CsvHelper" Version="33.0.1" />
     <PackageReference Include="Spectre.Console" Version="0.49.1" />
     <PackageReference Include="Spectre.Console.Cli" Version="0.49.1" />
+    <PackageReference Include="Microsoft.Extensions.Logging" Version="8.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="8.0.0" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Hephaestus.Core\Hephaestus.Core.csproj" />
+    <ProjectReference Include="..\Hephaestus.Desktop\Hephaestus.Desktop.csproj" />
   </ItemGroup>
 
 </Project>

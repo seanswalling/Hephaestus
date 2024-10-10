@@ -12,6 +12,7 @@ namespace Hephaestus.CLI
             var app = new CommandApp();
 
             FileLocations.EnsureFileStructures();
+            FileLocations.EnsureApplicationFileStructures();
 
             app.Configure(config =>
             {
@@ -20,7 +21,8 @@ namespace Hephaestus.CLI
                     config.PropagateExceptions();
                 });
 
-                config.AddCommand<AnalysePackagesCommand>("analyse-packages");
+                config.AddCommand<InitialiseCommand>("init");
+                config.AddCommand<AnalysePackagesCommand>("analyse");
 
                 config.AddBranch("list", list =>
                 {

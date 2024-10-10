@@ -25,27 +25,34 @@ namespace Hephaestus.CLI
                 if (!Directory.Exists(versionLocation))
                 {
                     errors.Add($"ERROR: Could not find {versionLocation}");
-                    continue;
+                    //continue;
                 }
 
                 var lib = Path.Combine(versionLocation, "lib");
                 var build = Path.Combine(versionLocation, "build");
 
+                List<string> frameworks = [];
+
                 if (!Directory.Exists(lib) && !Directory.Exists(build))
                 {
                     errors.Add($"ERROR: Could not find {lib} or {build}");
-                    continue;
+                    //continue;
+                }
+                else
+                {
+                    frameworks.AddRange((Directory.Exists(lib) ?
+                        Directory.EnumerateDirectories(lib, "*") :
+                        Directory.EnumerateDirectories(build, "*"))
+                        .Select(x => x.Split(Path.DirectorySeparatorChar).Last()));
                 }
 
-                var frameworks = (Directory.Exists(lib) ?
-                    Directory.EnumerateDirectories(lib, "*") :
-                    Directory.EnumerateDirectories(build, "*"))
-                    .Select(x => x.Split(Path.DirectorySeparatorChar).Last());
-
-                var isStandardCompliant = frameworks.Any(x =>
-                {
-                    return x.Contains("netstandard");
-                });
+                bool? isStandardCompliant =
+                    frameworks.Count != 0 ?
+                        frameworks.Any(x =>
+                        {
+                            return x.Contains("netstandard");
+                        })
+                        : null;
 
                 if (results.TryGetValue(package.Id, out PackageReferenceAndFramework? value))
                 {
@@ -54,7 +61,8 @@ namespace Hephaestus.CLI
                         Id = package.Id,
                         Frameworks = frameworks.ToArray(),
                         Version = package.Version,
-                        IsStandardCompliant = isStandardCompliant
+                        IsStandardCompliant = isStandardCompliant,
+                        Projects = []
                     });
                 }
                 else
@@ -69,7 +77,8 @@ namespace Hephaestus.CLI
                                 Id = package.Id,
                                 Frameworks = frameworks.ToArray(),
                                 Version = package.Version,
-                                IsStandardCompliant = isStandardCompliant
+                                IsStandardCompliant = isStandardCompliant,
+                                Projects = []
                             }
                         ],
                     });
@@ -93,8 +102,9 @@ namespace Hephaestus.CLI
 
             var results = analysisResult.Value;
 
-            var nonStandardPackages = results.Values.SelectMany(x => x.Versions).Where(x => !x.IsStandardCompliant);
-            var standardPackages = results.Values.SelectMany(x => x.Versions).Where(x => !x.IsStandardCompliant);
+            //Figure out better option to the standard compliance.
+            var nonStandardPackages = results.Values.SelectMany(x => x.Versions).Where(x => !x.IsStandardCompliant.Equals("Yes"));
+            var standardPackages = results.Values.SelectMany(x => x.Versions).Where(x => !x.IsStandardCompliant.Equals("Yes"));
 
             return new((standardPackages, nonStandardPackages), analysisResult.Errors);
 

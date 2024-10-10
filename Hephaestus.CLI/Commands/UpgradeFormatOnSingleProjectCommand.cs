@@ -12,7 +12,7 @@ namespace Hephaestus.CLI
     {
         public override int Execute(CommandContext context)
         {
-            var app = new Application();
+            var app = new Application(FileLocations.ApplicationRoot);
 
             var repos = app.KnownRepositories.Select(x => x.Name);
 

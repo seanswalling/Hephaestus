@@ -9,18 +9,20 @@ namespace Hephaestus.Core.Application
 {
     public class Application
     {
-        private CodeRespositoryParser _parser;
-        private FileSystemLoader _fileSystemLoader;
-        private BasicFileCollection _files;
+        private readonly CodeRespositoryParser _parser;
+        private readonly FileSystemLoader _fileSystemLoader;
+        private readonly BasicFileCollection _files;
+        private readonly KnownRepositoryManager _repositoryManager;
 
         public string Name { get; private set; }
         public string Path { get; private set; }
         public CacheManager CacheManager { get; private set; }
         public IEnumerable<KnownRepository> KnownRepositories { get; private set; }
 
-        public Application()
+        public Application(string applicationRoot)
         {
-            KnownRepositories = KnownRepositoryManager.Load();
+            _repositoryManager = new KnownRepositoryManager(applicationRoot);
+            KnownRepositories = _repositoryManager.Load();
 
             _fileSystemLoader = new FileSystemLoader();
 
@@ -70,7 +72,7 @@ namespace Hephaestus.Core.Application
             if (KnownRepositoryManager.Exists(kr))
             {
                 KnownRepositories = KnownRepositories.Append(kr);
-                KnownRepositoryManager.Save(KnownRepositories);
+                _repositoryManager.Save(KnownRepositories);
             }
         }
 
