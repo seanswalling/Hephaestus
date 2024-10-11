@@ -11,6 +11,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Hephaestus.CLI", "Hephaestu
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Hephaestus.Core.Tests", "Hephaestus.Core.Tests\Hephaestus.Core.Tests.csproj", "{9840E6AE-E2EE-479F-9B3D-6441519DAFA9}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hephaestus.Avalonia", "Hephaestus.Avalonia\Hephaestus.Avalonia.csproj", "{FA903373-5C11-44E8-80C8-5CBD2FABB338}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,6 +35,10 @@ Global
 		{9840E6AE-E2EE-479F-9B3D-6441519DAFA9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9840E6AE-E2EE-479F-9B3D-6441519DAFA9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9840E6AE-E2EE-479F-9B3D-6441519DAFA9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FA903373-5C11-44E8-80C8-5CBD2FABB338}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FA903373-5C11-44E8-80C8-5CBD2FABB338}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FA903373-5C11-44E8-80C8-5CBD2FABB338}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FA903373-5C11-44E8-80C8-5CBD2FABB338}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
