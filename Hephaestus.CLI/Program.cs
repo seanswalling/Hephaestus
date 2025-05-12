@@ -62,6 +62,8 @@ namespace Hephaestus.CLI
                         batch.AddCommand<RemovePackageBatchCommand>("package");
                     });
                 });
+
+                config.AddCommand<XUnitV3AnalysisCommand>("xunit");
             });
 
             try
