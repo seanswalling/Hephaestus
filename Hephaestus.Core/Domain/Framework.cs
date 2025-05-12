@@ -37,6 +37,7 @@
         net50,
         net60,
         net70,
-        net80
+        net80,
+        net90
     }
 }

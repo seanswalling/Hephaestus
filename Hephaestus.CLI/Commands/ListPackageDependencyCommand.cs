@@ -18,7 +18,7 @@ namespace Hephaestus.CLI.Commands
 
             var table = new Table
             {
-                Title = new TableTitle($"Package usgaes for {package}")
+                Title = new TableTitle($"Package usages for {package}")
             };
             table.AddColumn("Project");
             table.AddColumn("Output Type");

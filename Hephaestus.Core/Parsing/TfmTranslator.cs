@@ -42,6 +42,8 @@ namespace Hephaestus.Core.Parsing
             {"net6.0"           ,   Framework.net60         },
             {"net7.0"           ,   Framework.net70         },
             {"net8.0"           ,   Framework.net80         },
+            {"net8"             ,   Framework.net80         },
+            {"net9.0"           ,   Framework.net90         },
             {"netstandard1.0"   ,   Framework.netstandard10 },
             {"netstandard1.1"   ,   Framework.netstandard11 },
             {"netstandard1.2"   ,   Framework.netstandard12 },

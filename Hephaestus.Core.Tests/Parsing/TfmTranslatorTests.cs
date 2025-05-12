@@ -53,6 +53,7 @@ namespace Hephaestus.Core.Tests.Parsing
             yield return new object[] { "net6.0", Framework.net60 };
             yield return new object[] { "net7.0", Framework.net70 };
             yield return new object[] { "net8.0", Framework.net80 };
+            yield return new object[] { "net9.0", Framework.net90 };
             yield return new object[] { "netstandard1.0", Framework.netstandard10 };
             yield return new object[] { "netstandard1.1", Framework.netstandard11 };
             yield return new object[] { "netstandard1.2", Framework.netstandard12 };
