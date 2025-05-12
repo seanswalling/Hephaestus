@@ -82,10 +82,13 @@ namespace Hephaestus.Core.Building
 
         private static string WarningsBlock(Warnings warnings)
         {
-            if (warnings.WarningsNotAsErrors.Count() == 0 && warnings.WarningLevel == null && warnings.TreatWarningsAsErrors == null)
+            if (warnings.WarningsNotAsErrors.Count() == 0 &&
+                string.IsNullOrWhiteSpace(warnings.WarningLevel) &&
+                warnings.TreatWarningsAsErrors == null)
                 return string.Empty;
 
             var sb = new StringBuilder();
+            //sb.AppendLine("<!-- WarningsBlock -->");
             sb.AppendLine(StartPropertyGroup());
 
             if (!string.IsNullOrWhiteSpace(warnings.WarningLevel))
@@ -112,6 +115,7 @@ namespace Hephaestus.Core.Building
             if (scripts.Length == 0) return string.Empty;
 
             var sb = new StringBuilder();
+            //sb.AppendLine("<!-- EmbeddedFileBlock -->");
             sb.AppendLine(StartItemGroup());
             foreach (var script in scripts)
             {
@@ -137,6 +141,7 @@ namespace Hephaestus.Core.Building
             if (projectReferences.Count() == 0) return string.Empty;
 
             var sb = new StringBuilder();
+            //sb.AppendLine("<!-- ProjectReferenceBlock -->");
             sb.AppendLine(StartItemGroup());
             foreach (var projectReference in projectReferences)
             {
@@ -151,6 +156,7 @@ namespace Hephaestus.Core.Building
             if (packageReferences.Count() == 0) return string.Empty;
 
             var sb = new StringBuilder();
+            //sb.AppendLine("<!-- PackageReferenceBlock -->");
             sb.AppendLine(StartItemGroup());
             foreach (var packageReference in packageReferences)
             {
@@ -175,6 +181,7 @@ namespace Hephaestus.Core.Building
             if (gacReferences.Count() == 0) return string.Empty;
 
             var sb = new StringBuilder();
+            //sb.AppendLine("<!-- GacReferenceBlock -->");
             sb.AppendLine(StartItemGroup());
             foreach (var gacReference in gacReferences)
             {
