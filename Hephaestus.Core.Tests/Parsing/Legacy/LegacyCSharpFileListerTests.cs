@@ -26,7 +26,8 @@ namespace Hephaestus.Core.Tests.Parsing.Legacy
                 "Foo",
                 "Foo",
                 "Foo",
-                new Warnings(null, null, [])
+                new Warnings(null, null, []),
+                false
                 );
         }
 

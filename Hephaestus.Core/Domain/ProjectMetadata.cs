@@ -12,7 +12,7 @@ namespace Hephaestus.Core.Domain
         public string RootNamespace { get; }
         public string Title { get; }
         public Warnings Warnings { get; }
-
+        public bool IsTestProject { get; set; }
 
         public ProjectMetadata(
             string projectPath,
@@ -22,7 +22,8 @@ namespace Hephaestus.Core.Domain
             string assemblyName,
             string rootNamespace,
             string title,
-            Warnings warnings)
+            Warnings warnings,
+            bool isTestProject)
         {
             ArgumentException.ThrowIfNullOrWhiteSpace(projectPath, nameof(projectPath));
 
@@ -34,6 +35,7 @@ namespace Hephaestus.Core.Domain
             RootNamespace = rootNamespace;
             Title = title;
             Warnings = warnings;
+            IsTestProject = isTestProject;
         }
     }
 }

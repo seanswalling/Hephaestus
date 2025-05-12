@@ -27,7 +27,8 @@ namespace Hephaestus.Core.Tests.Parsing.Sdk
                 "Foo",
                 "Foo",
                 "Foo",
-                new Warnings(null, null, [])
+                new Warnings(null, null, []),
+                false
                 );
 
             var files = new SdkCSharpFileLister(_collection, meta).ListFiles();
@@ -50,7 +51,8 @@ namespace Hephaestus.Core.Tests.Parsing.Sdk
                 "Foo",
                 "Foo",
                 "Foo",
-                new Warnings(null, null, [])
+                new Warnings(null, null, []),
+                false
                 );
 
             var files = new SdkCSharpFileLister(_collection, meta).ListFiles();

@@ -6,10 +6,11 @@ namespace Hephaestus.Core.Tests.Domain
 {
     public class ProjectTests
     {
-        ProjectMetadata _metadata;
+        private readonly ProjectMetadata _metadata;
+
         public ProjectTests()
         {
-            _metadata = new ProjectMetadata("Foo\\Bah", Framework.Unknown, OutputType.Unknown, ProjectFormat.Unknown, "Foo", "Foo", "Foo", new Warnings(null, null, []));
+            _metadata = new ProjectMetadata("Foo\\Bah", Framework.Unknown, OutputType.Unknown, ProjectFormat.Unknown, "Foo", "Foo", "Foo", new Warnings(null, null, []), false);
         }
 
         [Fact]

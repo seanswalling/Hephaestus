@@ -44,7 +44,8 @@ namespace Hephaestus.Core.Application
                             new AssemblyNameParserFactory(),
                             new RootNamespaceParserFactory(),
                             new TitleParserFactory(),
-                            new WarningsParserFactory()),
+                            new WarningsParserFactory(),
+                            new TestProjectParserFactory()),
                         new CSharpFileListerFactory(_files),
                         new CSharpFileParser(
                             new CSharpFileNamespaceDeclarationParser(),

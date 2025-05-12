@@ -20,7 +20,8 @@ namespace Hephaestus.Core.Tests.Parsing
                 new AssemblyNameParserFactory(),
                 new RootNamespaceParserFactory(),
                 new TitleParserFactory(),
-                new WarningsParserFactory()
+                new WarningsParserFactory(),
+                new TestProjectParserFactory()
                 );
         }
 

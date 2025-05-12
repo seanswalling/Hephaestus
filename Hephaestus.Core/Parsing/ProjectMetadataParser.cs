@@ -13,6 +13,7 @@ namespace Hephaestus.Core.Parsing
         private readonly IRootNamespaceParserFactory _rootNamespaceParserFactory;
         private readonly ITitleParserFactory _titleParserFactory;
         private readonly IWarningsParserFactory _warningsParserFactory;
+        private readonly ITestProjectParserFactory _testProjectParserFactory;
 
         public ProjectMetadataParser(
             IProjectFormatParser formatParser,
@@ -21,7 +22,8 @@ namespace Hephaestus.Core.Parsing
             IAssemblyNameParserFactory assemblyNameParserFactory,
             IRootNamespaceParserFactory rootNamespaceParserFactory,
             ITitleParserFactory titleParserFactory,
-            IWarningsParserFactory warningsParserFactory)
+            IWarningsParserFactory warningsParserFactory,
+            ITestProjectParserFactory testProjectParserFactory)
         {
             _formatParser = formatParser;
             _projectFrameworkParserFactory = projectFrameworkParserFactory;
@@ -30,6 +32,7 @@ namespace Hephaestus.Core.Parsing
             _rootNamespaceParserFactory = rootNamespaceParserFactory;
             _titleParserFactory = titleParserFactory;
             _warningsParserFactory = warningsParserFactory;
+            _testProjectParserFactory = testProjectParserFactory;
         }
 
         public ProjectMetadata Parse(string projectPath, XDocument project)
@@ -42,7 +45,9 @@ namespace Hephaestus.Core.Parsing
             var title = _titleParserFactory.Create(format).Parse(project);
             var warnings = _warningsParserFactory.Create(format).Parse(project);
 
-            return new ProjectMetadata(projectPath, framework, outputType, format, assemblyName, rootNamespace, title ?? assemblyName, warnings);
+            var isTestProject = _testProjectParserFactory.Create(format).Parse(project);
+
+            return new ProjectMetadata(projectPath, framework, outputType, format, assemblyName, rootNamespace, title ?? assemblyName, warnings, isTestProject);
         }
     }
 
