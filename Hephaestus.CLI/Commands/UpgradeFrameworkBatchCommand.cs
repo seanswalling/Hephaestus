@@ -14,25 +14,26 @@ namespace Hephaestus.CLI
         {
             var repo = RepositoryFactory.SelectAndSetRepo();
 
+            var inputOptions = Directory.EnumerateFiles(FileLocations.InputFolder);
+
+            if (!inputOptions.Any())
+                AnsiConsole.WriteLine($"No Input(s) avaliable at {FileLocations.InputFolder}");
+
             var fmwk = AnsiConsole.Prompt(new SelectionPrompt<Framework>()
                 .Title("Select a Framework")
                 .AddChoices(Enum.GetValues<Framework>()));
 
-            var outputType = AnsiConsole.Prompt(new SelectionPrompt<OutputType>()
-                .Title("Select an Output")
-                .AddChoices(Enum.GetValues<OutputType>()));
+            var input = AnsiConsole.Prompt(new SelectionPrompt<string>()
+                .Title("Select an Input File")
+                .AddChoices(inputOptions));
 
-            var subselection = AnsiConsole.Prompt(new SelectionPrompt<string>()
-                .Title("Tests Libs or Normal Libs")
-                .AddChoices(["Tests", "Normal"]));
+            var inputLines = File.ReadAllLines(input); //expect line delimited file list
 
-            var projectsWithOutput = repo.Solutions
+            var projects = repo.Solutions
                 .SelectMany(x => x.Projects)
-                .Where(x => x.Metadata.OutputType == outputType);
-
-            var projects = subselection == "Tests" ?
-                projectsWithOutput.Where(x => x.Metadata?.ProjectPath?.Contains(".Tests.") ?? false) :
-                projectsWithOutput.Where(x => !x.Metadata?.ProjectPath?.Contains(".Tests.") ?? true);
+                .DistinctBy(x => x.Metadata.ProjectPath)
+                .Where(x => inputLines.Contains(x.Metadata.ProjectPath, StringComparer.OrdinalIgnoreCase))
+                .ToList();
 
             AnsiConsole.Progress()
                 .Columns(

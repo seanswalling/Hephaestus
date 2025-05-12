@@ -9,6 +9,7 @@ namespace Hephaestus.CLI
         public static readonly string ApplicationRoot = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "Hephaestus");
         public static readonly string OutputFolder = Path.Combine(ApplicationRoot, "output");
         public static readonly string ErrorFolder = Path.Combine(ApplicationRoot, "error");
+        public static readonly string InputFolder = Path.Combine(ApplicationRoot, "input");
         public static readonly Func<Command, DateTime, string> OutputJsonFile = (ActualCommand, DateTime) => Path.Combine(OutputFolder, $"{(ActualCommand).GetType().Name}-{DateTime:yyyy-MM-dd_HH-mm-ss}.json");
         public static readonly Func<Command, DateTime, string> OutputCsvFile = (ActualCommand, DateTime) => Path.Combine(OutputFolder, $"{(ActualCommand).GetType().Name}-{DateTime:yyyy-MM-dd_HH-mm-ss}.csv");
         public static readonly Func<DateTime, string> ErrorFile = (DateTime) => Path.Combine(ErrorFolder, $"errors-{DateTime:yyyy-MM-dd}.txt");
@@ -28,6 +29,11 @@ namespace Hephaestus.CLI
             if (!Directory.Exists(ErrorFolder))
             {
                 Directory.CreateDirectory(ErrorFolder);
+            }
+
+            if (!Directory.Exists(InputFolder))
+            {
+                Directory.CreateDirectory(InputFolder);
             }
         }
 

@@ -6,6 +6,4 @@ namespace Hephaestus.Core.Parsing.Factories
     {
         IWarningsParser Create(ProjectFormat format);
     }
-
-
 }

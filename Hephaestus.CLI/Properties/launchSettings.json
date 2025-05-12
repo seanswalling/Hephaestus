@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "Hephaestus.CLI": {
+      "commandName": "Project",
+      "commandLineArgs": "xunit"
+    }
+  }
+}

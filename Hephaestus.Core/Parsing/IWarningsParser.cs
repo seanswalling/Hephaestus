@@ -7,6 +7,4 @@ namespace Hephaestus.Core.Parsing
     {
         Warnings Parse(XDocument document);
     }
-
-
 }

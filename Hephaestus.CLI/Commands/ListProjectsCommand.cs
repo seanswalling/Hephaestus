@@ -1,6 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Globalization;
+using System.IO;
 using System.Linq;
-using Hephaestus.Core.Application;
+using CsvHelper;
 using Hephaestus.Core.Domain;
 using Spectre.Console;
 using Spectre.Console.Cli;
@@ -11,45 +13,48 @@ namespace Hephaestus.CLI
     {
         public override int Execute(CommandContext context)
         {
-            var app = new Application(FileLocations.ApplicationRoot);
-            IEnumerable<Project> projects = new List<Project>();
+            var repo = RepositoryFactory.SelectAndSetRepo();
 
-            var repos = app.KnownRepositories.Select(x => x.Name);
+            var outputType = AnsiConsole.Prompt(new SelectionPrompt<OutputType>()
+                .Title("Select an Output (Unknown for All)")
+                .AddChoices(Enum.GetValues<OutputType>()));
 
-            var option = AnsiConsole.Prompt(new SelectionPrompt<KnownRepository>()
-               .Title("Select a Repository")
-               .AddChoices(app.KnownRepositories)
-               .UseConverter((kr) => kr.Name));
-            app.SetRepository(option);
+            var framework = AnsiConsole.Prompt(new SelectionPrompt<Framework>()
+                .Title("Select a Framework (Unknown for All)")
+                .AddChoices(Enum.GetValues<Framework>()));
 
-            AnsiConsole.Clear();
+            var includeTests = AnsiConsole.Prompt(new ConfirmationPrompt("Include Tests?"));
+
             AnsiConsole.Status()
                 .Spinner(Spinner.Known.Dots9)
                 .Start("Loading...", ctx =>
                 {
-                    app.LoadRepository();
-                    ctx.Status("Parsing...");
-                    var repo = app.Parse();
                     ctx.Status("Filtering...");
-                    projects = repo.Solutions
+                    var projects = repo.Solutions
                         .SelectMany(x => x.Projects)
-                        .Where(x => x.Metadata.Format == ProjectFormat.Framework);
+                        .DistinctBy(x => x.Metadata.ProjectPath)
+                        .Where(x => outputType == OutputType.Unknown || x.Metadata.OutputType == outputType)
+                        .Where(x => framework == Framework.Unknown || x.Metadata.Framework == framework)
+                        .Where(x => includeTests || !x.Metadata.IsTestProject)
+                        .OrderBy(x => x.Metadata.ProjectPath);
+                    ctx.Status("Writing...");
+
+                    var output = projects.Select(x => new
+                    {
+                        x.Metadata.ProjectPath,
+                        x.Metadata.OutputType,
+                        x.Metadata.Framework
+                    }).ToList();
+
+                    var file = FileLocations.OutputCsvFile(this, DateTime.Now);
+                    using var writer = new StreamWriter(file);
+                    using var csv = new CsvWriter(writer, CultureInfo.InvariantCulture);
+                    csv.WriteRecords(output);
+
+                    AnsiConsole.WriteLine($"File Written: {file}");
                 });
 
-            var table = new Table
-            {
-                Title = new TableTitle("Projects")
-            };
-            table.AddColumn("Project");
-            table.AddColumn("Framework Status");
-            foreach (var project in projects.OrderBy(x => x.Name))
-            {
-                var mkup = project.Metadata.Format == ProjectFormat.Sdk ?
-                    "green" : "darkorange3";
 
-                table.AddRow(new Markup($"[{mkup}]{project.Name}[/]"), new Markup($"[{mkup}]{project.Metadata.Format}[/]"));
-            }
-            AnsiConsole.Write(table);
             return 0;
         }
     }
