@@ -18,18 +18,12 @@ namespace Hephaestus.Core.Domain
 
         private void Add(ProjectReference reference)
         {
-            if (!ProjectReferences.Contains(reference))
-            {
-                ProjectReferences.Add(reference);
-            }
+            ProjectReferences.Add(reference);
         }
 
         private void Add(PackageReference reference)
         {
-            if (!PackageReferences.Contains(reference))
-            {
-                PackageReferences.Add(reference);
-            }
+            PackageReferences.Add(reference);
         }
 
         public void Upgrade(PackageReference oldReference, PackageReference upgradedReference)
@@ -51,10 +45,7 @@ namespace Hephaestus.Core.Domain
 
         private void Add(GacReference reference)
         {
-            if (!GacReferences.Contains(reference))
-            {
-                GacReferences.Add(reference);
-            }
+            GacReferences.Add(reference);
         }
 
         public void Add(IReference reference)

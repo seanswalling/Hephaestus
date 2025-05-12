@@ -104,5 +104,42 @@ namespace Hephaestus.Core.Tests.Domain
             Assert.Contains(package1, manager.PackageReferences);
             Assert.Contains(package2, manager.PackageReferences);
         }
+
+        [Fact]
+        public void CanRemoveReferences()
+        {
+            var manager = new ReferenceManager();
+            var project = new ProjectReference("Foo/Bah");
+            var package = new PackageReference("Test.Foo", "1.0");
+
+            manager.Add(project);
+            manager.Add(package);
+
+            Assert.Single(manager.PackageReferences);
+            Assert.Single(manager.ProjectReferences);
+
+            manager.Remove(package);
+            Assert.Empty(manager.PackageReferences);
+        }
+
+        [Fact]
+        public void CanRemoveReferenceByIdAndVersion()
+        {
+            var manager = new ReferenceManager();
+            manager.Add(new PackageReference("Test.bah", "1.2"));
+            Assert.Single(manager.PackageReferences);
+            manager.Remove(new PackageReference("Test.bah", "1.2"));
+            Assert.Empty(manager.PackageReferences);
+        }
+
+        [Fact]
+        public void CannotRemoveWithWrongVersion()
+        {
+            var manager = new ReferenceManager();
+            manager.Add(new PackageReference("Test.Bah", "1.2"));
+            Assert.Single(manager.PackageReferences);
+            manager.Remove(new PackageReference("Test.Bah", "1.1"));
+            Assert.Single(manager.PackageReferences);
+        }
     }
 }

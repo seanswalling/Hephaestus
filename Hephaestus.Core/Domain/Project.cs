@@ -5,7 +5,6 @@ namespace Hephaestus.Core.Domain
 {
     public class Project
     {
-
         public string Name { get; }
         public ProjectMetadata Metadata { get; }
         public IEnumerable<CSharpFile> Files { get; }
@@ -31,6 +30,22 @@ namespace Hephaestus.Core.Domain
             References = references;
             Metadata = metadata;
             References = references;
+        }
+
+        public void Add(IReference reference)
+        {
+            References.Add(reference);
+        }
+
+        public void ChangeFramework(Framework framework)
+        {
+            Metadata.Framework = framework;
+        }
+
+        public void RemoveUsing(CSharpUsing usingDirective)
+        {
+            foreach (var file in Files)
+                file.RemoveUsing(usingDirective);
         }
     }
 }

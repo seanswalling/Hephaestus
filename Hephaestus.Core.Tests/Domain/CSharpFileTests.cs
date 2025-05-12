@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using Hephaestus.Core.Domain;
 using Xunit;
 
@@ -193,6 +194,53 @@ namespace Hephaestus.Core.Tests.Domain
             Assert.NotEqual(file2.GetHashCode(), file3.GetHashCode());
             Assert.NotEqual(file3.GetHashCode(), file1.GetHashCode());
             Assert.NotEqual(file3.GetHashCode(), file2.GetHashCode());
+        }
+
+        [Fact]
+        public void CanAddCsUsing()
+        {
+            var file = new CSharpFile(
+                "Path/To/file",
+                new CSharpNamespace("Foo.Bah"),
+                null
+                );
+
+            file.AddUsing(new CSharpUsing(new CSharpNamespace("Baz.Bah")));
+
+            Assert.Single(file.UsingDirectives);
+            Assert.Equal(new CSharpUsing(new CSharpNamespace("Baz.Bah")), file.UsingDirectives.Single());
+        }
+
+        [Fact]
+        public void CanRemoveCsUsing()
+        {
+            var file = new CSharpFile(
+                "Path/To/file",
+                new CSharpNamespace("Foo.Bah"),
+                null
+                );
+
+            file.AddUsing(new CSharpUsing(new CSharpNamespace("Baz.Bah")));
+            Assert.Single(file.UsingDirectives);
+
+            file.RemoveUsing(new CSharpUsing(new CSharpNamespace("Baz.Bah")));
+            Assert.Empty(file.UsingDirectives);
+        }
+
+        [Fact]
+        public void CannotRemoveUsingWithIncorrectName()
+        {
+            var file = new CSharpFile(
+                "Path/To/file",
+                new CSharpNamespace("Foo.Bah"),
+                null
+                );
+
+            file.AddUsing(new CSharpUsing(new CSharpNamespace("Baz.Bah")));
+            Assert.Single(file.UsingDirectives);
+
+            file.RemoveUsing(new CSharpUsing(new CSharpNamespace("Baz.Bah")));
+            Assert.Empty(file.UsingDirectives);
         }
     }
 }

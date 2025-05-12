@@ -6,7 +6,7 @@ namespace Hephaestus.Core.Domain
     public class CSharpFile
     {
         private readonly string _filePath;
-        public readonly IEnumerable<CSharpUsing> UsingDirectives;
+        public readonly List<CSharpUsing> UsingDirectives;
         public readonly CSharpNamespace NamespaceDeclaration;
 
         public CSharpFile(
@@ -18,7 +18,7 @@ namespace Hephaestus.Core.Domain
             ArgumentNullException.ThrowIfNull(namespaceDeclaration, nameof(namespaceDeclaration));
 
             _filePath = filePath;
-            UsingDirectives = usingDirectives;
+            UsingDirectives = usingDirectives != null ? [.. usingDirectives] : [];
             NamespaceDeclaration = namespaceDeclaration;
         }
 
@@ -42,6 +42,16 @@ namespace Hephaestus.Core.Domain
         {
             return StringComparer.OrdinalIgnoreCase.GetHashCode(_filePath) ^
                 NamespaceDeclaration.GetHashCode();
+        }
+
+        public void RemoveUsing(CSharpUsing usingDirective)
+        {
+            UsingDirectives.RemoveAll(ud => ud.Equals(usingDirective));
+        }
+
+        public void AddUsing(CSharpUsing usingDirective)
+        {
+            UsingDirectives.Add(usingDirective);
         }
     }
 }
