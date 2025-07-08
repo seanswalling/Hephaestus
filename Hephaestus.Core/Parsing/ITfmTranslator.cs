@@ -5,5 +5,6 @@ namespace Hephaestus.Core.Parsing
     public interface ITfmTranslator
     {
         public Framework Translate(string? moniker);
+        public string Translate(Framework framework);
     }
 }

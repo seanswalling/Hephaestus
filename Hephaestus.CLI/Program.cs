@@ -23,7 +23,7 @@ namespace Hephaestus.CLI
 
                 config.AddCommand<InitialiseCommand>("init");
                 config.AddCommand<AnalysePackagesCommand>("analyse");
-
+                config.AddCommand<AssessUpgradabilityCommand>("assess");
                 config.AddBranch("list", list =>
                 {
                     list.AddCommand<ListProjectsCommand>("projects");
@@ -38,6 +38,7 @@ namespace Hephaestus.CLI
                             references.AddCommand<ListPackageReferencesToCsvCommand>("csv");
                         });
                     });
+                    list.AddCommand<ListNet48LeafNodesCommand>("n48ln");
                 });
 
                 config.AddCommand<RebuildCacheCommand>("rebuild");

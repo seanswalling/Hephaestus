@@ -19,24 +19,17 @@ namespace Hephaestus.Core.Building
         public string Build()
         {
             var sb = new StringBuilder();
-            sb.Append(MetadataBlock(_project.Metadata));
-            sb.AppendLine();
+            sb.AppendBlock(MetadataBlock(_project.Metadata));
             //sb.Append(PrivateAssetsBlock());
             //sb.AppendLine();
-            sb.Append(WarningsBlock(_project.Metadata.Warnings));
-            sb.AppendLine();
-            sb.Append(EmbeddedFileBlock(
-                _project.EmbeddedResources
-                    .Where(x => x.FilePath.Contains(".sql") || x.FilePath.Contains(".docx"))
-                    .ToArray()
+            sb.AppendBlock(WarningsBlock(_project.Metadata.Warnings));
+            sb.AppendBlock(EmbeddedFileBlock(
+                [.. _project.EmbeddedResources.Where(x => x.FilePath.Contains(".sql") || x.FilePath.Contains(".docx"))]
             ));
-            sb.AppendLine();
-            sb.Append(ProjectReferenceBlock(_project.References.ProjectReferences));
-            sb.AppendLine();
-            sb.Append(PackageReferenceBlock(_project.References.PackageReferences));
-            sb.AppendLine();
-            sb.Append(GacReferenceBlock(_project.References.GacReferences));
-            sb.AppendLine();
+            sb.AppendBlock(ProjectReferenceBlock(_project.References.ProjectReferences));
+            sb.AppendBlock(PackageReferenceBlock(_project.References.PackageReferences));
+            sb.AppendBlock(GacReferenceBlock(_project.References.GacReferences));
+
             sb.Append("</Project>");
             return sb.ToString();
         }
@@ -138,7 +131,7 @@ namespace Hephaestus.Core.Building
 
         private static string ProjectReferenceBlock(IEnumerable<ProjectReference> projectReferences)
         {
-            if (projectReferences.Count() == 0) return string.Empty;
+            if (!projectReferences.Any()) return string.Empty;
 
             var sb = new StringBuilder();
             //sb.AppendLine("<!-- ProjectReferenceBlock -->");
@@ -153,7 +146,7 @@ namespace Hephaestus.Core.Building
 
         private static string PackageReferenceBlock(IEnumerable<PackageReference> packageReferences)
         {
-            if (packageReferences.Count() == 0) return string.Empty;
+            if (!packageReferences.Any()) return string.Empty;
 
             var sb = new StringBuilder();
             //sb.AppendLine("<!-- PackageReferenceBlock -->");
@@ -178,10 +171,9 @@ namespace Hephaestus.Core.Building
 
         private static string GacReferenceBlock(IEnumerable<GacReference> gacReferences)
         {
-            if (gacReferences.Count() == 0) return string.Empty;
+            if (!gacReferences.Any()) return string.Empty;
 
             var sb = new StringBuilder();
-            //sb.AppendLine("<!-- GacReferenceBlock -->");
             sb.AppendLine(StartItemGroup());
             foreach (var gacReference in gacReferences)
             {
@@ -381,6 +373,18 @@ namespace Hephaestus.Core.Building
         public static string TripleIndent(this string line)
         {
             return line.Indent().Indent().Indent();
+        }
+    }
+
+    public static class StringBuilderExtensions
+    {
+        public static void AppendBlock(this StringBuilder sb, string block)
+        {
+            if (block != string.Empty)
+            {
+                sb.Append(block);
+                sb.AppendLine();
+            }
         }
     }
 }

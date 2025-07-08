@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 
 namespace Hephaestus.Core.Domain
 {
@@ -35,6 +37,18 @@ namespace Hephaestus.Core.Domain
         public void Add(IReference reference)
         {
             References.Add(reference);
+        }
+
+        public string[] GetProjectReferenceAsAbsolutePaths()
+        {
+            return [.. References.ProjectReferences.Select(x =>
+                Path.GetFullPath(
+                        Path.Combine(
+                                Directory.GetParent(Metadata.ProjectPath)?.ToString() ?? string.Empty,
+                                x.RelativePath
+                        )
+                )
+            )];
         }
 
         public void ChangeFramework(Framework framework)
